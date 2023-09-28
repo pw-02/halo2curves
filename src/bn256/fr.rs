@@ -30,7 +30,8 @@ use core::fmt;
 use core::ops::{Add, Mul, Neg, Sub};
 use rand::RngCore;
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
-
+#[cfg(feature = "gpu")]
+use super::engine::u64_to_u32;
 #[cfg(feature = "derive_serde")]
 use serde::{Deserialize, Serialize};
 
@@ -334,6 +335,23 @@ impl FromUniformBytes<64> for Fr {
         ])
     }
 }
+
+#[cfg(feature = "gpu")]
+impl ec_gpu::GpuField for Fr {
+    fn one() -> Vec<u32> {
+        u64_to_u32(&R.0[..])
+    }
+
+    fn r2() -> Vec<u32> {
+        u64_to_u32(&R2.0[..])
+    }
+
+    fn modulus() -> Vec<u32> {
+        u64_to_u32(&MODULUS.0[..])
+    }
+   
+}
+
 
 impl WithSmallOrderMulGroup<3> for Fr {
     const ZETA: Self = ZETA;

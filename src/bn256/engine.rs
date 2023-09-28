@@ -629,6 +629,22 @@ pub fn pairing(g1: &G1Affine, g2: &G2Affine) -> Gt {
     u.final_exponentiation()
 }
 
+
+#[cfg(feature = "gpu")]
+impl ec_gpu::GpuEngine for Bn256 {
+    type Scalar = Fr;
+    type Fp = Fq;
+}
+extern crate alloc;
+/// Converts 64-bit little-endian limbs to 32-bit little endian limbs.
+#[cfg(feature = "gpu")]
+pub fn u64_to_u32(limbs: &[u64]) -> alloc::vec::Vec<u32> {
+    limbs
+        .iter()
+        .flat_map(|limb| [(limb & 0xFFFF_FFFF) as u32, (limb >> 32) as u32].into_iter())
+        .collect()
+}
+
 #[derive(Clone, Debug)]
 pub struct Bn256;
 

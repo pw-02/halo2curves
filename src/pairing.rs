@@ -1,10 +1,16 @@
 use crate::CurveAffine;
-use core::ops::Mul;
 use ff::PrimeField;
+
+pub use group;
+
+use core::ops::{Add, AddAssign, Mul};
+
 use group::{
     prime::PrimeCurve, Group, GroupOps, GroupOpsOwned, ScalarMul, ScalarMulOwned,
     UncompressedEncoding,
 };
+
+
 
 pub trait Engine: Sized + 'static + Clone {
     /// This is the scalar field of the engine's groups.

@@ -2,7 +2,7 @@ mod arithmetic;
 pub mod hash_to_curve;
 pub mod pairing;
 pub mod serde;
-
+pub mod fft;
 pub mod bn256;
 pub mod grumpkin;
 pub mod pasta;

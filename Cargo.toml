@@ -28,7 +28,7 @@ getrandom = { version = "0.2", features = ["js"] }
 subtle = "2.5"
 ff = { version = "0.13.0", default-features = false, features = ["std"] }
 group = "0.13.0"
-pairing = "0.23.0"
+# pairing = "0.23.0"
 pasta_curves = "0.5.0"
 static_assertions = "1.1.0"
 rand = "0.8"
@@ -43,15 +43,16 @@ hex = { version = "0.4", optional = true, default-features = false, features = [
 blake2b_simd = "1"
 rayon = "1.8"
 unroll = "0.1.5"
+ec-gpu ={ path = "../ec-gpu/ec-gpu", optional = true}
 
 [features]
-default = ["bits"]
+default = ["bits", "gpu"]
 asm = []
 bits = ["ff/bits"]
 bn256-table = []
 derive_serde = ["serde/derive", "serde_arrays", "hex", "pasta_curves/serde"]
 print-trace = ["ark-std/print-trace"]
-
+gpu = ["ec-gpu"]
 [profile.bench]
 opt-level = 3
 debug = false

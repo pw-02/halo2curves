@@ -31,7 +31,10 @@ use core::fmt;
 use core::ops::{Add, Mul, Neg, Sub};
 use rand::RngCore;
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
-
+#[cfg(feature = "gpu")]
+use super::engine::u64_to_u32;
+#[cfg(feature = "derive_serde")]
+use serde::{Deserialize, Serialize};
 /// This represents an element of $\mathbb{F}_r$ where
 ///
 /// `r = 0x30644e72e131a029b85045b68181585d2833e84879b9709143e1f593f0000001`
@@ -324,6 +327,22 @@ impl FromUniformBytes<64> for Fr {
             u64::from_le_bytes(bytes[56..64].try_into().unwrap()),
         ])
     }
+}
+
+#[cfg(feature = "gpu")]
+impl ec_gpu::GpuField for Fr {
+    fn one() -> Vec<u32> {
+        u64_to_u32(&R.0[..])
+    }
+
+    fn r2() -> Vec<u32> {
+        u64_to_u32(&R2.0[..])
+    }
+
+    fn modulus() -> Vec<u32> {
+        u64_to_u32(&MODULUS.0[..])
+    }
+   
 }
 
 impl WithSmallOrderMulGroup<3> for Fr {

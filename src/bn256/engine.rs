@@ -8,6 +8,7 @@ use crate::bn256::fr::*;
 use crate::ff::{Field, PrimeField};
 use crate::group::cofactor::CofactorCurveAffine;
 use crate::group::Group;
+use crate::pairing;
 use core::borrow::Borrow;
 use core::iter::Sum;
 use core::ops::{Add, Mul, MulAssign, Neg, Sub};
@@ -629,21 +630,49 @@ pub fn pairing(g1: &G1Affine, g2: &G2Affine) -> Gt {
     u.final_exponentiation()
 }
 
+#[cfg(feature = "gpu")]
+impl ec_gpu::GpuEngine for Bn256 {
+    type Scalar = Fr;
+    type Fp = Fq;
+}
+extern crate alloc;
+/// Converts 64-bit little-endian limbs to 32-bit little endian limbs.
+#[cfg(feature = "gpu")]
+pub fn u64_to_u32(limbs: &[u64]) -> alloc::vec::Vec<u32> {
+    limbs
+        .iter()
+        .flat_map(|limb| [(limb & 0xFFFF_FFFF) as u32, (limb >> 32) as u32].into_iter())
+        .collect()
+}
+
 #[derive(Clone, Debug)]
 pub struct Bn256;
 
 impl Engine for Bn256 {
-    type Fr = Fr;
-    type G1 = G1;
-    type G1Affine = G1Affine;
-    type G2 = G2;
-    type G2Affine = G2Affine;
-    type Gt = Gt;
-
-    fn pairing(p: &Self::G1Affine, q: &Self::G2Affine) -> Self::Gt {
-        pairing(p, q)
+        type Scalar = Fr;
+        type G1 = G1;
+        type G1Affine = G1Affine;
+        type G2 = G2;
+        type G2Affine = G2Affine;
+        type Gt = Gt;
+    
+        fn pairing(p: &Self::G1Affine, q: &Self::G2Affine) -> Self::Gt {
+            pairing(p, q)
+        }
     }
-}
+
+// impl Engine for Bn256 {
+//     type Fr = Fr;
+//     type G1 = G1;
+//     type G1Affine = G1Affine;
+//     type G2 = G2;
+//     type G2Affine = G2Affine;
+//     type Gt = Gt;
+
+//     fn pairing(p: &Self::G1Affine, q: &Self::G2Affine) -> Self::Gt {
+//         pairing(p, q)
+//     }
+// }
 
 impl MultiMillerLoop for Bn256 {
     type G2Prepared = G2Prepared;

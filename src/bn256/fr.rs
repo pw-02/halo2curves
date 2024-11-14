@@ -328,6 +328,33 @@ impl FromUniformBytes<64> for Fr {
         ])
     }
 }
+// #[cfg(feature = "gpu")]
+// impl ec_gpu::GpuName for Fr {
+//     fn name() -> String {
+//         // Use the `name!` macro to generate a unique identifier.
+//         ec_gpu::name!()
+//     }
+// }
+
+// #[cfg(feature = "gpu")]
+// impl ec_gpu::GpuField for Fr {
+//     fn one() -> Vec<u32> {
+//         u64_to_u32(&R.0[..])
+//     }
+
+//     fn r2() -> Vec<u32> {
+//         u64_to_u32(&R2.0[..])
+//     }
+
+//     fn modulus() -> Vec<u32> {
+//         u64_to_u32(&MODULUS.0[..])
+//     }
+//     fn sub_field_name() -> Option<String> {
+//         // Since `Fp` is not an extension field, we return `None`.
+//         None
+//     }
+// }
+
 
 #[cfg(feature = "gpu")]
 impl ec_gpu::GpuField for Fr {

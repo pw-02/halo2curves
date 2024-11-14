@@ -630,9 +630,10 @@ pub fn pairing(g1: &G1Affine, g2: &G2Affine) -> Gt {
     u.final_exponentiation()
 }
 
+
 #[cfg(feature = "gpu")]
 impl ec_gpu::GpuEngine for Bn256 {
-    type Scalar = Fr;
+    type Fr = Fr;
     type Fp = Fq;
 }
 extern crate alloc;
@@ -648,8 +649,9 @@ pub fn u64_to_u32(limbs: &[u64]) -> alloc::vec::Vec<u32> {
 #[derive(Clone, Debug)]
 pub struct Bn256;
 
+
 impl Engine for Bn256 {
-        type Scalar = Fr;
+        type Fr = Fr;
         type G1 = G1;
         type G1Affine = G1Affine;
         type G2 = G2;
